@@ -1,21 +1,20 @@
 // File: src/pages/HomePage.tsx
-
 import React, { useState, useEffect } from "react";
 import CharacterGrid from "../components/CharacterGrid";
 import SearchBar from "../components/SearchBar";
 import Filters from "../components/Filters";
 import { getCharacters, searchCharacters } from "../services/api";
 import Pagination from "../components/Pagination";
+import useFilters from "../hooks/useFilters";
+import Layout from "../components/Layout";
 
-// HomePage component to display character grid with search and filter functionalities
 const HomePage: React.FC = () => {
   const [characters, setCharacters] = useState([]);
-  const [filteredCharacters, setFilteredCharacters] = useState<any[]>([]); // Adjust type if necessary
+  const [filteredCharacters, setFilteredCharacters] = useState<any[]>([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Fetch characters based on search query, filters, and page number
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -36,28 +35,24 @@ const HomePage: React.FC = () => {
     fetchData();
   }, [page, searchQuery]);
 
-  // Handle page change
   const handlePageChange = (newPage: number) => {
     if (newPage >= 1 && newPage <= totalPages) {
       setPage(newPage);
     }
   };
 
-  // Handle search input change
   const handleSearch = (query: string) => {
     setSearchQuery(query);
     setPage(1); // Reset to first page when searching
   };
 
-  // Handle filter changes
   const handleFilterChange = (newFilteredCharacters: any) => {
     setFilteredCharacters(newFilteredCharacters);
-    //
     setPage(1); // Reset to first page when filtering
   };
 
   return (
-    <div>
+    <Layout>
       <SearchBar onSearch={handleSearch} />
       <Filters
         characters={characters}
@@ -70,7 +65,7 @@ const HomePage: React.FC = () => {
         totalPages={totalPages}
         onPageChange={handlePageChange}
       />
-    </div>
+    </Layout>
   );
 };
 

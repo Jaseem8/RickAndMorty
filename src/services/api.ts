@@ -1,5 +1,3 @@
-// File: src/services/api.ts
-
 import axios from "axios";
 
 // Create an Axios instance with the base URL for the Rick and Morty API
@@ -17,22 +15,24 @@ export const searchCharacters = (
   filters: any = {},
   page: number = 1
 ) => {
-  // Convert filters and page number to query parameters
   const queryParams = new URLSearchParams({
     name,
     page: page.toString(),
     ...filters,
   }).toString();
   console.log(queryParams);
-  // Perform API request with query parameters
   return api.get(`/character?${queryParams}`);
 };
 
 // Fetch a specific character by ID
 export const getCharacter = (id: number) => api.get(`/character/${id}`);
 
-// Fetch all locations
-export const getLocations = () => api.get("/location");
+// Fetch locations with pagination
+export const getLocations = (page: number = 1) =>
+  api.get(`/location?page=${page}`);
 
-// Fetch all episodes
-export const getEpisodes = () => api.get("/episode");
+export const getLocation = (id: number) => api.get(`/location/${id}`);
+// Fetch episodes with pagination
+export const getEpisodes = (page: number = 1) =>
+  api.get(`/episode?page=${page}`);
+export const getEpisode = (id: number) => api.get(`/episode/${id}`);
