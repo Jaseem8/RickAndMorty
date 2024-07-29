@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+
 // Styled container for pagination buttons
 const PaginationContainer = styled.div`
   display: flex;
@@ -10,27 +11,31 @@ const PaginationContainer = styled.div`
 `;
 
 // Styled button for pagination
-const PageButton = styled.button.attrs<{ active: boolean }>({
-  // Filter out the active attribute to avoid passing it to the DOM
-  active: undefined,
-})<{ active: boolean }>`
+const PageButton = styled.button<{ active: boolean }>`
   margin: 0 5px;
   padding: 10px 15px;
   background-color: ${(props) =>
-    props.active ? "#28a745" : "#f8f9fa"}; /* Green for active */
-  color: ${(props) => (props.active ? "#fff" : "#28a745")};
-  border: 1px solid ${(props) => (props.active ? "#28a745" : "#ced4da")};
+    props.active
+      ? "#007bff"
+      : "#f8f9fa"}; /* Blue for active, light gray for others */
+  color: ${(props) =>
+    props.active
+      ? "#fff"
+      : "#007bff"}; /* White for active text, blue for others */
+  border: 1px solid ${(props) => (props.active ? "#007bff" : "#ced4da")}; /* Blue border for active, gray for others */
   border-radius: 5px;
   cursor: pointer;
   font-size: 0.9rem;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
 
   &:hover {
     background-color: ${(props) =>
       props.active
-        ? "#218838"
-        : "#e2e6ea"}; /* Darker green on hover for active */
-    color: ${(props) => (props.active ? "#fff" : "#218838")};
+        ? "#0056b3" // Darker blue for active on hover
+        : "#e2e6ea"}; /* Light gray for non-active on hover */
+    color: ${(props) => (props.active ? "#fff" : "#007bff")};
+    transform: ${(props) =>
+      props.active ? "scale(1.05)" : "none"}; /* Slight scale for active */
   }
 
   @media (max-width: 768px) {
@@ -52,12 +57,10 @@ const Pagination: React.FC<PaginationProps> = ({
   totalPages,
   onPageChange,
 }) => {
-  const pageNumbers = [];
-
-  // Generate page numbers based on total pages
-  for (let i = 1; i <= totalPages; i++) {
-    pageNumbers.push(i);
-  }
+  const pageNumbers = Array.from(
+    { length: totalPages },
+    (_, index) => index + 1
+  );
 
   return (
     <PaginationContainer>

@@ -1,6 +1,7 @@
 // File: src/components/NavigationBar.tsx
+
 import React from "react";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 
 const NavContainer = styled.nav`
@@ -11,22 +12,32 @@ const NavContainer = styled.nav`
   color: white;
 `;
 
-const NavLink = styled(Link)`
+const StyledNavLink = styled(NavLink)`
   color: white;
   text-decoration: none;
   padding: 10px;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+
   &:hover {
     background-color: #555;
-    border-radius: 4px;
+    color: #1eac23;
+  }
+
+  &.active {
+    background-color: #007bff;
+    color: white;
   }
 `;
 
 const NavigationBar: React.FC = () => {
   return (
     <NavContainer>
-      <NavLink to="/">Home</NavLink>
-      <NavLink to="/locations">Locations</NavLink>
-      <NavLink to="/episodes">Episodes</NavLink>
+      <StyledNavLink to="/" end>
+        Home
+      </StyledNavLink>
+      <StyledNavLink to="/locations">Locations</StyledNavLink>
+      <StyledNavLink to="/episodes">Episodes</StyledNavLink>
     </NavContainer>
   );
 };

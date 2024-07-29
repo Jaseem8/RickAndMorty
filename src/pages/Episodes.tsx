@@ -122,6 +122,7 @@ const Episodes: React.FC = () => {
         setEpisodes(response.data.results);
         setFilteredEpisodes(response.data.results);
         setTotalPages(response.data.info.pages);
+        console.log("count", response.data.info.count);
       } catch (error) {
         console.error("Failed to fetch episodes:", error);
       }
@@ -191,7 +192,7 @@ const Episodes: React.FC = () => {
           />
         </FilterContainer>
         <EpisodesGrid>
-          {filteredEpisodes.slice((page - 1) * 10, page * 10).map((episode) => (
+          {filteredEpisodes.slice((page - 1) * 9, page * 9).map((episode) => (
             <EpisodeCard
               key={episode.id}
               onClick={() => handleEpisodeClick(episode.id)}

@@ -9,6 +9,7 @@ import Layout from "../components/Layout";
 
 const LocationsContainer = styled.div`
   padding: 20px;
+  background: linear-gradient(to bottom, #f5f5f5, #ffffff);
 `;
 
 const LocationsGrid = styled.div`
@@ -21,10 +22,11 @@ const LocationsGrid = styled.div`
 const LocationCard = styled.div`
   border: 1px solid #ddd;
   border-radius: 8px;
-  padding: 10px;
+  padding: 15px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   cursor: pointer;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  background: #fff;
 
   &:hover {
     transform: scale(1.05);
@@ -33,16 +35,60 @@ const LocationCard = styled.div`
 `;
 
 const LocationName = styled.h3`
-  font-size: 1.2em;
+  font-size: 1.4em;
   margin: 0;
+  color: #333;
 `;
 
 const LocationType = styled.p`
   margin: 4px 0;
+  font-size: 1em;
+  color: #666;
 `;
 
 const LocationDimension = styled.p`
   margin: 4px 0;
+  font-size: 1em;
+  color: #666;
+`;
+
+const FiltersContainer = styled.div`
+  display: flex;
+  gap: 5px;
+  margin-bottom: 20px;
+  padding: 15px;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+`;
+
+const FilterInput = styled.input`
+  padding: 10px;
+  margin: 8px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: calc(100% - 22px);
+  font-size: 1em;
+
+  &:focus {
+    border-color: #007bff;
+    outline: none;
+  }
+`;
+
+const FilterButton = styled.button`
+  padding: 10px 15px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #0056b3;
+  }
 `;
 
 interface FiltersProps {
@@ -64,27 +110,27 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
   };
 
   return (
-    <div>
-      <input
+    <FiltersContainer>
+      <FilterInput
         type="text"
         placeholder="Name"
         value={name}
         onChange={(e) => setName(e.target.value)}
       />
-      <input
+      <FilterInput
         type="text"
         placeholder="Type"
         value={type}
         onChange={(e) => setType(e.target.value)}
       />
-      <input
+      <FilterInput
         type="text"
         placeholder="Dimension"
         value={dimension}
         onChange={(e) => setDimension(e.target.value)}
       />
-      <button onClick={handleFilterChange}>Apply Filters</button>
-    </div>
+      <FilterButton onClick={handleFilterChange}>Apply Filters</FilterButton>
+    </FiltersContainer>
   );
 };
 
