@@ -1,52 +1,50 @@
+// File: src/components/CharacterCard.tsx
+
 import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
+// Styled container for character card
 const Card = styled.div`
-  border: 1px solid #ddd;
+  border: 1px solid #ccc;
   border-radius: 8px;
   overflow: hidden;
+  text-align: center;
   transition: transform 0.2s;
-  max-width: 200px;
-  margin: 0 auto;
+  max-width: 100%;
 
   &:hover {
     transform: scale(1.05);
   }
 `;
 
-const ImageWrapper = styled.div`
+// Styled image for character card
+const CharacterImage = styled.img`
   width: 100%;
-  height: 0;
-  padding-top: 100%; // This gives a 1:1 aspect ratio
-  position: relative;
-  overflow: hidden;
+  height: auto;
 `;
 
-const Image = styled.img`
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-  object-fit: cover;
-`;
-
-const CharacterInfo = styled.div`
+// Styled container for character details
+const CharacterDetails = styled.div`
   padding: 16px;
-  text-align: center;
 `;
 
-const CharacterCard: React.FC<{ character: any }> = ({ character }) => {
+interface CharacterCardProps {
+  character: any;
+}
+
+// CharacterCard component to display individual character details
+const CharacterCard: React.FC<CharacterCardProps> = ({ character }) => {
   return (
     <Card>
       <Link to={`/character/${character.id}`}>
-        <ImageWrapper>
-          <Image src={character.image} alt={character.name} />
-        </ImageWrapper>
-        <CharacterInfo>
+        <CharacterImage src={character.image} alt={character.name} />
+        <CharacterDetails>
           <h3>{character.name}</h3>
-        </CharacterInfo>
+          {/* <p>Status: {character.status}</p>
+          <p>Species: {character.species}</p>
+          <p>Gender: {character.gender}</p> */}
+        </CharacterDetails>
       </Link>
     </Card>
   );

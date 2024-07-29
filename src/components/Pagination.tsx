@@ -1,5 +1,24 @@
+// File: src/components/Pagination.tsx
+
 import React from "react";
 import styled from "styled-components";
+
+// Styled container for pagination buttons
+const PaginationContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+`;
+
+// Styled button for pagination
+const PageButton = styled.button<{ active: boolean }>`
+  margin: 0 5px;
+  padding: 10px;
+  background-color: ${(props) => (props.active ? "blue" : "white")};
+  color: ${(props) => (props.active ? "white" : "black")};
+  border: 1px solid black;
+  cursor: pointer;
+`;
 
 interface PaginationProps {
   currentPage: number;
@@ -7,26 +26,7 @@ interface PaginationProps {
   onPageChange: (page: number) => void;
 }
 
-const PaginationContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
-  flex-wrap: wrap;
-`;
-
-const PageButton = styled.button<{ isActive: boolean }>`
-  margin: 0 5px;
-  padding: 10px;
-  background-color: ${({ isActive }) => (isActive ? "blue" : "white")};
-  color: ${({ isActive }) => (isActive ? "white" : "black")};
-  border: 1px solid black;
-  cursor: pointer;
-
-  &:hover {
-    background-color: ${({ isActive }) => (isActive ? "darkblue" : "#f0f0f0")};
-  }
-`;
-
+// Pagination component to handle page navigation
 const Pagination: React.FC<PaginationProps> = ({
   currentPage,
   totalPages,
@@ -34,6 +34,7 @@ const Pagination: React.FC<PaginationProps> = ({
 }) => {
   const pageNumbers = [];
 
+  // Generate page numbers based on total pages
   for (let i = 1; i <= totalPages; i++) {
     pageNumbers.push(i);
   }
@@ -44,7 +45,7 @@ const Pagination: React.FC<PaginationProps> = ({
         <PageButton
           key={number}
           onClick={() => onPageChange(number)}
-          isActive={number === currentPage}
+          active={number === currentPage}
         >
           {number}
         </PageButton>
