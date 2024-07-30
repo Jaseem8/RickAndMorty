@@ -65,6 +65,9 @@ const StyledNavLink = styled(NavLink)`
 
 const NavContainer = styled.nav`
   display: flex;
+  position: sticky;
+  top: 0px;
+  z-index: 2;
   justify-content: space-around;
   padding: 10px;
   background-color: #333;
