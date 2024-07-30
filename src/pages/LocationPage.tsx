@@ -1,11 +1,12 @@
 // File: src/pages/LocationPage.tsx
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { getLocation, getCharacter } from "../services/api"; // Add this function to your API service
+import { getLocation, getCharacter } from "../services/api";
 import Layout from "../components/Layout";
 import LoadingSpinner from "../components/Spinner";
+const ResidentCard = React.lazy(() => import("../components/ResidentCard"));
 
 const LocationContainer = styled.div`
   padding: 20px;
@@ -66,41 +67,6 @@ const ResidentGrid = styled.div`
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 `;
 
-const ResidentCard = styled.div`
-  display: flex;
-  align-items: center;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  background: #ffffff;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  cursor: pointer;
-
-  &:hover {
-    transform: scale(1.05);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-  }
-`;
-
-const ResidentImage = styled.img`
-  border-radius: 8px;
-  width: 60px;
-  height: 60px;
-  object-fit: cover;
-  margin-right: 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-`;
-
-const ResidentName = styled.h4`
-  margin: 0;
-  font-size: 1.1em;
-  color: #333;
-  white-space: nowrap; /* Prevents the text from wrapping */
-  overflow: hidden; /* Hides text that overflows */
-  text-overflow: ellipsis; /* Adds ellipsis (...) when the text is clipped */
-`;
-
 const LocationPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [location, setLocation] = useState<any>(null);
@@ -113,7 +79,6 @@ const LocationPage: React.FC = () => {
         const locationResponse = await getLocation(Number(id));
         setLocation(locationResponse.data);
 
-        // Fetch details for each resident
         const residentPromises = locationResponse.data.residents.map(
           (url: string) => getCharacter(parseInt(url.split("/").pop() || ""))
         );
@@ -159,13 +124,13 @@ const LocationPage: React.FC = () => {
           <h2>Residents</h2>
           <ResidentGrid>
             {residents.map((resident) => (
-              <ResidentCard
-                key={resident.id}
-                onClick={() => handleResidentClick(resident.id)}
-              >
-                <ResidentImage src={resident.image} alt={resident.name} />
-                <ResidentName>{resident.name}</ResidentName>
-              </ResidentCard>
+              <Suspense fallback={<LoadingSpinner />}>
+                <ResidentCard
+                  key={resident.id}
+                  resident={resident}
+                  onClick={() => handleResidentClick(resident.id)}
+                />
+              </Suspense>
             ))}
           </ResidentGrid>
         </ResidentsList>

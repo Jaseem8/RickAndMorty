@@ -1,3 +1,5 @@
+// File: src/components/CharacterGrid.tsx
+
 import React, { Suspense, lazy } from "react";
 import styled from "styled-components";
 import LoadingSpinner from "./Spinner";

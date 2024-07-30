@@ -8,6 +8,7 @@ import Pagination from "../components/Pagination";
 import Layout from "../components/Layout";
 import LoadingSpinner from "../components/Spinner";
 
+// Styled-components for styling the components
 const EpisodesContainer = styled.div`
   padding: 30px;
   background: linear-gradient(to bottom, #f7f7f7, #e0e0e0);
@@ -90,6 +91,7 @@ const FilterButton = styled.button`
   }
 `;
 
+// Interface for the episode data structure
 interface Episode {
   id: number;
   name: string;
@@ -100,6 +102,7 @@ interface Episode {
   created: string;
 }
 
+// Episodes component
 const Episodes: React.FC = () => {
   const navigate = useNavigate();
   const [episodes, setEpisodes] = useState<Episode[]>([]);
@@ -108,6 +111,7 @@ const Episodes: React.FC = () => {
   const [totalPages, setTotalPages] = useState(0);
   const [filters, setFilters] = useState({ name: "", episode: "" });
 
+  // Fetch episodes data when the page changes
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -123,6 +127,7 @@ const Episodes: React.FC = () => {
     fetchData();
   }, [page]);
 
+  // Apply filters whenever filters or episodes change
   useEffect(() => {
     const applyFilters = () => {
       const newFilteredEpisodes = episodes.filter((episode) => {
@@ -141,6 +146,7 @@ const Episodes: React.FC = () => {
     applyFilters();
   }, [filters, episodes]);
 
+  // Handle filter changes and reset to the first page
   const handleFilterChange = (newFilters: {
     name: string;
     episode: string;
@@ -149,12 +155,14 @@ const Episodes: React.FC = () => {
     setPage(1); // Reset to the first page when filters are changed
   };
 
+  // Handle page change
   const handlePageChange = (newPage: number) => {
     if (newPage >= 1 && newPage <= totalPages) {
       setPage(newPage);
     }
   };
 
+  // Navigate to episode detail page on card click
   const handleCardClick = (id: number) => {
     navigate(`/episode/${id}`);
   };
@@ -163,6 +171,7 @@ const Episodes: React.FC = () => {
     <Layout>
       <EpisodesContainer>
         <FiltersContainer>
+          {/* Filter inputs for name and episode code */}
           <FilterInput
             type="text"
             placeholder="Name"
@@ -185,6 +194,7 @@ const Episodes: React.FC = () => {
         </FiltersContainer>
         <Suspense fallback={<LoadingSpinner />}>
           <EpisodesGrid>
+            {/* Display filtered episodes */}
             {filteredEpisodes.map((episode) => (
               <EpisodeCard
                 key={episode.id}

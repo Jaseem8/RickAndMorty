@@ -1,6 +1,6 @@
 // File: src/pages/EpisodePage.tsx
 
-import React, { useState, useEffect, Suspense } from "react";
+import React, { useState, useEffect, Suspense, lazy } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import { getEpisode } from "../services/api";
@@ -8,6 +8,12 @@ import { useNavigate } from "react-router-dom";
 import Layout from "../components/Layout";
 import LoadingSpinner from "../components/Spinner";
 
+// Lazy load CharacterCard component
+const EpisodeCharacterCard = lazy(
+  () => import("../components/EpisodeCharacterCard")
+);
+
+// Styled components for the page layout and design
 const PageContainer = styled.div`
   padding: 30px;
   max-width: 1200px;
@@ -46,78 +52,47 @@ const CharactersGrid = styled.div`
   gap: 20px;
 `;
 
-const CharacterCard = styled.div`
-  background: linear-gradient(135deg, #f9f9f9, #f1f1f1);
-  border-radius: 12px;
-  padding: 15px;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-  text-align: center;
-  cursor: pointer;
-  transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
-
-  &:hover {
-    transform: scale(1.1);
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
-    background: linear-gradient(135deg, #f1f1f1, #e2e2e2);
-  }
-`;
-
-const CharacterImage = styled.img`
-  width: 100%;
-  border-radius: 10px;
-  border: 2px solid #e1e8ed;
-  transition: border-color 0.3s ease;
-
-  ${CharacterCard}:hover & {
-    border-color: #3498db;
-  }
-`;
-
-const CharacterName = styled.p`
-  margin-top: 12px;
-  font-size: 1.1em;
-  font-weight: bold;
-  color: #2c3e50;
-`;
-
 const EpisodePage: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
-  const [episode, setEpisode] = useState<any>(null);
-  const [characters, setCharacters] = useState<any[]>([]);
-  const navigate = useNavigate();
+  const { id } = useParams<{ id: string }>(); // Get the episode ID from the URL parameters
+  const [episode, setEpisode] = useState<any>(null); // State to store episode details
+  const [characters, setCharacters] = useState<any[]>([]); // State to store characters appearing in the episode
+  const navigate = useNavigate(); // Hook to navigate programmatically
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await getEpisode(Number(id));
-        setEpisode(response.data);
+        const response = await getEpisode(Number(id)); // Fetch episode details by ID
+        setEpisode(response.data); // Set episode details in state
         const characterResponses = await Promise.all(
           response.data.characters.map((url: string) =>
             fetch(url).then((res) => res.json())
           )
         );
-        setCharacters(characterResponses);
+        setCharacters(characterResponses); // Set characters in state
       } catch (error) {
         console.error("Failed to fetch episode details:", error);
       }
     };
 
     fetchData();
-  }, [id]);
+  }, [id]); // Fetch data when the component mounts or the ID changes
 
-  if (!episode) return <LoadingSpinner />;
+  if (!episode) return <LoadingSpinner />; // Show loading spinner if episode data is not yet loaded
 
   const handleCharacterClick = (characterId: number) => {
-    navigate(`/character/${characterId}`);
+    navigate(`/character/${characterId}`); // Navigate to character page when a character card is clicked
   };
 
   return (
     <Layout>
       <PageContainer>
         <EpisodeDetails>
-          <EpisodeTitle>{episode.name}</EpisodeTitle>
-          <EpisodeInfo>Air Date: {episode.air_date}</EpisodeInfo>
-          <EpisodeInfo>Episode Code: {episode.episode}</EpisodeInfo>
+          <EpisodeTitle>{episode.name}</EpisodeTitle>{" "}
+          {/* Display episode name */}
+          <EpisodeInfo>Air Date: {episode.air_date}</EpisodeInfo>{" "}
+          {/* Display air date */}
+          <EpisodeInfo>Episode Code: {episode.episode}</EpisodeInfo>{" "}
+          {/* Display episode code */}
         </EpisodeDetails>
         <h2
           style={{
@@ -130,11 +105,12 @@ const EpisodePage: React.FC = () => {
         </h2>
         <CharactersGrid>
           {characters.map((character: any) => (
-            <Suspense key={character.id} fallback={<LoadingSpinner />}>
-              <CharacterCard onClick={() => handleCharacterClick(character.id)}>
-                <CharacterImage src={character.image} alt={character.name} />
-                <CharacterName>{character.name}</CharacterName>
-              </CharacterCard>
+            <Suspense fallback={<LoadingSpinner />}>
+              <EpisodeCharacterCard
+                key={character.id}
+                character={character}
+                onClick={() => handleCharacterClick(character.id)}
+              />{" "}
             </Suspense>
           ))}
         </CharactersGrid>

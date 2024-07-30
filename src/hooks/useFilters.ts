@@ -1,10 +1,14 @@
+// src/hooks/useFilter.ts
+
 import { useState, useEffect } from "react";
 
+// Custom hook for managing filters and filtered characters
 const useFilters = (
   characters: any[],
   filteredCharacters: any[],
   setFilteredCharacters: React.Dispatch<React.SetStateAction<any[]>>
 ) => {
+  // State to hold the selected filters
   const [filters, setFilters] = useState({
     status: [] as string[],
     gender: [] as string[],
@@ -14,6 +18,7 @@ const useFilters = (
     episode: [] as string[],
   });
 
+  // States to hold unique values for each filter category
   const [uniqueStatus, setUniqueStatus] = useState<string[]>([]);
   const [uniqueGender, setUniqueGender] = useState<string[]>([]);
   const [uniqueLocations, setUniqueLocations] = useState<string[]>([]);
@@ -21,6 +26,7 @@ const useFilters = (
   const [uniqueSpecies, setUniqueSpecies] = useState<string[]>([]);
   const [uniqueTypes, setUniqueTypes] = useState<string[]>([]);
 
+  // Effect to update unique filter values based on filtered characters
   useEffect(() => {
     const locationsSet = new Set<string>();
     const episodesSet = new Set<string>();
@@ -29,6 +35,7 @@ const useFilters = (
     const statusSet = new Set<string>();
     const genderSet = new Set<string>();
 
+    // Loop through filtered characters and extract unique values
     filteredCharacters.forEach((character) => {
       if (character.location && character.location.name) {
         locationsSet.add(character.location.name);
@@ -52,6 +59,7 @@ const useFilters = (
       }
     });
 
+    // Set unique values to state
     setUniqueLocations(Array.from(locationsSet));
     setUniqueEpisodes(Array.from(episodesSet));
     setUniqueSpecies(Array.from(speciesSet));
@@ -60,6 +68,7 @@ const useFilters = (
     setUniqueGender(Array.from(genderSet));
   }, [filteredCharacters]);
 
+  // Effect to apply filters and update filtered characters
   useEffect(() => {
     const applyFilters = () => {
       const newCharacters = characters.filter((character) => {
@@ -88,6 +97,7 @@ const useFilters = (
     applyFilters();
   }, [filters, characters, setFilteredCharacters]);
 
+  // Handler for changing filter values
   const handleFilterChange = (
     event: React.ChangeEvent<HTMLSelectElement>,
     filterName: string
@@ -103,6 +113,7 @@ const useFilters = (
     });
   };
 
+  // Handler for removing a specific filter value
   const handleRemoveFilterValue = (filterName: string, value: string) => {
     setFilters((prevFilters) => {
       const newValues = prevFilters[filterName as keyof typeof filters].filter(

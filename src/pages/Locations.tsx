@@ -146,6 +146,7 @@ const Locations: React.FC = () => {
 
   const navigate = useNavigate();
 
+  //get and set locations
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -161,6 +162,7 @@ const Locations: React.FC = () => {
     fetchData();
   }, [page]);
 
+  //apply filters
   useEffect(() => {
     const applyFilters = () => {
       const newFilteredLocations = locations.filter(
@@ -199,9 +201,9 @@ const Locations: React.FC = () => {
     <Layout>
       <LocationsContainer>
         <Filters onFilterChange={handleFilterChange} />
-        <Suspense fallback={<LoadingSpinner />}>
-          <LocationsGrid>
-            {filteredLocations.map((location) => (
+        <LocationsGrid>
+          {filteredLocations.map((location) => (
+            <Suspense fallback={<LoadingSpinner />}>
               <LocationCard
                 key={location.id}
                 onClick={() => handleCardClick(location.id)}
@@ -212,9 +214,9 @@ const Locations: React.FC = () => {
                   Dimension: {location.dimension}
                 </LocationDimension>
               </LocationCard>
-            ))}
-          </LocationsGrid>
-        </Suspense>
+            </Suspense>
+          ))}
+        </LocationsGrid>
         <Pagination
           currentPage={page}
           totalPages={totalPages}
