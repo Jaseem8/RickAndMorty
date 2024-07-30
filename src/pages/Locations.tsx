@@ -1,15 +1,36 @@
 import React, { useState, useEffect, Suspense } from "react";
 import { useNavigate } from "react-router-dom";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { getLocations } from "../services/api";
 import Pagination from "../components/Pagination";
 import Layout from "../components/Layout";
 import LoadingSpinner from "../components/Spinner";
 
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+`;
+
+const slideIn = keyframes`
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+`;
+
 const LocationsContainer = styled.div`
   padding: 30px;
   background: linear-gradient(to bottom, #f0f0f0, #e0e0e0);
   border-radius: 12px;
+  animation: ${fadeIn} 0.5s ease-in-out;
 `;
 
 const LocationsGrid = styled.div`
@@ -26,6 +47,7 @@ const LocationCard = styled.div`
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
   cursor: pointer;
   transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+  animation: ${slideIn} 0.5s ease;
 
   &:hover {
     transform: scale(1.05);
@@ -37,19 +59,39 @@ const LocationCard = styled.div`
 const LocationName = styled.h3`
   font-size: 1.6em;
   margin: 0;
-  color: #333; /* Dark Gray */
+  color: #333;
+  text-decoration: underline;
+  text-decoration-color: #999;
+  transition: text-decoration-color 0.3s ease, color 0.3s ease;
+
+  ${LocationCard}:hover & {
+    text-decoration-color: #666;
+    color: #000;
+  }
 `;
 
 const LocationType = styled.p`
   margin: 8px 0;
   font-size: 1.1em;
-  color: #666; /* Medium Gray */
+  color: #666;
+  font-style: italic;
+  transition: color 0.3s ease;
+
+  ${LocationCard}:hover & {
+    color: #333;
+  }
 `;
 
 const LocationDimension = styled.p`
   margin: 8px 0;
   font-size: 1.1em;
-  color: #666; /* Medium Gray */
+  color: #666;
+  font-weight: bold;
+  transition: color 0.3s ease;
+
+  ${LocationCard}:hover & {
+    color: #333;
+  }
 `;
 
 const FiltersContainer = styled.div`
@@ -60,37 +102,41 @@ const FiltersContainer = styled.div`
   background: #d0d0d0;
   border-radius: 10px;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  animation: ${fadeIn} 0.5s ease-in-out;
 `;
 
 const FilterInput = styled.input`
   padding: 12px;
   margin: 6px 0;
-  border: 1px solid #ccc; /* Light Gray */
+  border: 1px solid #ccc;
   border-radius: 6px;
   width: calc(100% - 24px);
   font-size: 1em;
-  color: #333; /* Dark Gray */
+  color: #333;
   background: #f9f9f9;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
 
   &:focus {
-    border-color: #bbb; /* Slightly Darker Gray */
+    border-color: #bbb;
+    background-color: #fff;
     outline: none;
   }
 `;
 
 const FilterButton = styled.button`
   padding: 12px 20px;
-  background-color: #ccc; /* Light Gray */
-  color: #333; /* Dark Gray */
+  background-color: #ccc;
+  color: #333;
   border: none;
   border-radius: 6px;
   cursor: pointer;
   font-size: 1em;
-  transition: background-color 0.3s ease, transform 0.3s ease;
+  transition: background-color 0.3s ease, transform 0.3s ease, color 0.3s ease;
 
   &:hover {
-    background-color: #bbb; /* Slightly Darker Gray */
+    background-color: #bbb;
     transform: scale(1.02);
+    color: #000;
   }
 `;
 
@@ -102,7 +148,6 @@ interface FiltersProps {
   }) => void;
 }
 
-// Filters component for filtering by name, type, and dimension
 const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
   const [name, setName] = useState("");
   const [type, setType] = useState("");
@@ -146,7 +191,6 @@ const Locations: React.FC = () => {
 
   const navigate = useNavigate();
 
-  //get and set locations
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -162,7 +206,6 @@ const Locations: React.FC = () => {
     fetchData();
   }, [page]);
 
-  //apply filters
   useEffect(() => {
     const applyFilters = () => {
       const newFilteredLocations = locations.filter(
