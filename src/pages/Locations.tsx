@@ -1,93 +1,96 @@
-// File: src/pages/Locations.tsx
-
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { getLocations } from "../services/api";
 import Pagination from "../components/Pagination";
 import Layout from "../components/Layout";
+import LoadingSpinner from "../components/Spinner";
 
 const LocationsContainer = styled.div`
-  padding: 20px;
-  background: linear-gradient(to bottom, #f5f5f5, #ffffff);
+  padding: 30px;
+  background: linear-gradient(to bottom, #f0f0f0, #e0e0e0);
+  border-radius: 12px;
 `;
 
 const LocationsGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 16px;
-  margin-bottom: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
 `;
 
 const LocationCard = styled.div`
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 15px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  padding: 20px;
+  background: linear-gradient(135deg, #d0d0d0, #c0c0c0);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
   cursor: pointer;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  background: #fff;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
 
   &:hover {
     transform: scale(1.05);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+    background: linear-gradient(135deg, #c0c0c0, #d0d0d0);
   }
 `;
 
 const LocationName = styled.h3`
-  font-size: 1.4em;
+  font-size: 1.6em;
   margin: 0;
-  color: #333;
+  color: #333; /* Dark Gray */
 `;
 
 const LocationType = styled.p`
-  margin: 4px 0;
-  font-size: 1em;
-  color: #666;
+  margin: 8px 0;
+  font-size: 1.1em;
+  color: #666; /* Medium Gray */
 `;
 
 const LocationDimension = styled.p`
-  margin: 4px 0;
-  font-size: 1em;
-  color: #666;
+  margin: 8px 0;
+  font-size: 1.1em;
+  color: #666; /* Medium Gray */
 `;
 
 const FiltersContainer = styled.div`
   display: flex;
-  gap: 5px;
-  margin-bottom: 20px;
-  padding: 15px;
-  background: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  gap: 10px;
+  margin-bottom: 30px;
+  padding: 20px;
+  background: #d0d0d0;
+  border-radius: 10px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 `;
 
 const FilterInput = styled.input`
-  padding: 10px;
-  margin: 8px 0;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  width: calc(100% - 22px);
+  padding: 12px;
+  margin: 6px 0;
+  border: 1px solid #ccc; /* Light Gray */
+  border-radius: 6px;
+  width: calc(100% - 24px);
   font-size: 1em;
+  color: #333; /* Dark Gray */
+  background: #f9f9f9;
 
   &:focus {
-    border-color: #007bff;
+    border-color: #bbb; /* Slightly Darker Gray */
     outline: none;
   }
 `;
 
 const FilterButton = styled.button`
-  padding: 10px 15px;
-  background-color: #007bff;
-  color: white;
+  padding: 12px 20px;
+  background-color: #ccc; /* Light Gray */
+  color: #333; /* Dark Gray */
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
   font-size: 1em;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, transform 0.3s ease;
 
   &:hover {
-    background-color: #0056b3;
+    background-color: #bbb; /* Slightly Darker Gray */
+    transform: scale(1.02);
   }
 `;
 
@@ -141,7 +144,7 @@ const Locations: React.FC = () => {
   const [totalPages, setTotalPages] = useState(0);
   const [filters, setFilters] = useState({ name: "", type: "", dimension: "" });
 
-  const navigate = useNavigate(); // Updated from useHistory to useNavigate
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -189,27 +192,29 @@ const Locations: React.FC = () => {
   };
 
   const handleCardClick = (id: number) => {
-    navigate(`/location/${id}`); // Updated from history.push to navigate
+    navigate(`/location/${id}`);
   };
 
   return (
     <Layout>
       <LocationsContainer>
         <Filters onFilterChange={handleFilterChange} />
-        <LocationsGrid>
-          {filteredLocations.map((location) => (
-            <LocationCard
-              key={location.id}
-              onClick={() => handleCardClick(location.id)}
-            >
-              <LocationName>{location.name}</LocationName>
-              <LocationType>Type: {location.type}</LocationType>
-              <LocationDimension>
-                Dimension: {location.dimension}
-              </LocationDimension>
-            </LocationCard>
-          ))}
-        </LocationsGrid>
+        <Suspense fallback={<LoadingSpinner />}>
+          <LocationsGrid>
+            {filteredLocations.map((location) => (
+              <LocationCard
+                key={location.id}
+                onClick={() => handleCardClick(location.id)}
+              >
+                <LocationName>{location.name}</LocationName>
+                <LocationType>Type: {location.type}</LocationType>
+                <LocationDimension>
+                  Dimension: {location.dimension}
+                </LocationDimension>
+              </LocationCard>
+            ))}
+          </LocationsGrid>
+        </Suspense>
         <Pagination
           currentPage={page}
           totalPages={totalPages}

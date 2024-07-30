@@ -11,18 +11,18 @@ const PaginationContainer = styled.div`
 `;
 
 // Styled button for pagination
-const PageButton = styled.button<{ active: boolean }>`
+const PageButton = styled.button<{ $isActive: boolean }>`
   margin: 0 5px;
   padding: 10px 15px;
   background-color: ${(props) =>
-    props.active
+    props.$isActive
       ? "#007bff"
       : "#f8f9fa"}; /* Blue for active, light gray for others */
   color: ${(props) =>
-    props.active
+    props.$isActive
       ? "#fff"
       : "#007bff"}; /* White for active text, blue for others */
-  border: 1px solid ${(props) => (props.active ? "#007bff" : "#ced4da")}; /* Blue border for active, gray for others */
+  border: 1px solid ${(props) => (props.$isActive ? "#007bff" : "#ced4da")}; /* Blue border for active, gray for others */
   border-radius: 5px;
   cursor: pointer;
   font-size: 0.9rem;
@@ -30,12 +30,12 @@ const PageButton = styled.button<{ active: boolean }>`
 
   &:hover {
     background-color: ${(props) =>
-      props.active
-        ? "#0056b3" // Darker blue for active on hover
+      props.$isActive
+        ? "#0056b3"
         : "#e2e6ea"}; /* Light gray for non-active on hover */
-    color: ${(props) => (props.active ? "#fff" : "#007bff")};
+    color: ${(props) => (props.$isActive ? "#fff" : "#007bff")};
     transform: ${(props) =>
-      props.active ? "scale(1.05)" : "none"}; /* Slight scale for active */
+      props.$isActive ? "scale(1.05)" : "none"}; /* Slight scale for active */
   }
 
   @media (max-width: 768px) {
@@ -68,7 +68,7 @@ const Pagination: React.FC<PaginationProps> = ({
         <PageButton
           key={number}
           onClick={() => onPageChange(number)}
-          active={number === currentPage}
+          $isActive={number === currentPage}
         >
           {number}
         </PageButton>

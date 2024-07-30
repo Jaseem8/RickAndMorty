@@ -10,17 +10,12 @@ export const getCharacters = (page: number) =>
   api.get(`/character?page=${page}`);
 
 // Fetch characters by search query and filters, including page number
-export const searchCharacters = (
-  name: string = "",
-  filters: any = {},
-  page: number = 1
-) => {
+export const searchCharacters = (name: string = "", page: number = 1) => {
   const queryParams = new URLSearchParams({
     name,
     page: page.toString(),
-    ...filters,
   }).toString();
-  console.log(queryParams);
+  // console.log(queryParams);
   return api.get(`/character?${queryParams}`);
 };
 

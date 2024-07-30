@@ -4,23 +4,17 @@ import styled from "styled-components";
 
 // Styled container for character card
 const Card = styled.div`
-  border: 1px solid #ddd;
-  border-radius: 12px;
-  overflow: hidden;
-  text-align: center;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  max-width: 100%;
-  background: #fff;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  padding: 20px;
+  background: #f5f5f5; /* Light Gray */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
 
   &:hover {
     transform: scale(1.05);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-  }
-
-  @media (max-width: 768px) {
-    max-width: 100%;
-    margin: 10px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    background: #e0e0e0; /* Slightly Darker Gray */
   }
 `;
 
@@ -28,23 +22,24 @@ const Card = styled.div`
 const CharacterImage = styled.img`
   width: 100%;
   height: auto;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #ccc;
 `;
 
 // Styled container for character details
 const CharacterDetails = styled.div`
   padding: 16px;
-  background: #fafafa;
+  background: #f5f5f5; /* White Background */
 
   h3 {
     margin: 0;
-    color: #333;
+    color: #333; /* Dark Gray */
+    font-size: 1.4em;
   }
 
   p {
-    margin: 4px 0;
-    color: #666;
-    font-size: 0.9rem;
+    margin: 8px 0;
+    color: #666; /* Medium Gray */
+    font-size: 1.1em;
   }
 `;
 

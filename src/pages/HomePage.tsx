@@ -5,7 +5,6 @@ import SearchBar from "../components/SearchBar";
 import Filters from "../components/Filters";
 import { getCharacters, searchCharacters } from "../services/api";
 import Pagination from "../components/Pagination";
-import useFilters from "../hooks/useFilters";
 import Layout from "../components/Layout";
 
 const HomePage: React.FC = () => {
@@ -27,6 +26,7 @@ const HomePage: React.FC = () => {
         setCharacters(response.data.results);
         setFilteredCharacters(response.data.results);
         setTotalPages(response.data.info.pages);
+        // console.log("totalPages", response.data.info.pages);
       } catch (error) {
         console.error("Failed to fetch characters:", error);
       }
@@ -36,6 +36,8 @@ const HomePage: React.FC = () => {
   }, [page, searchQuery]);
 
   const handlePageChange = (newPage: number) => {
+    console.log("number", newPage);
+
     if (newPage >= 1 && newPage <= totalPages) {
       setPage(newPage);
     }
@@ -46,10 +48,10 @@ const HomePage: React.FC = () => {
     setPage(1); // Reset to first page when searching
   };
 
-  const handleFilterChange = (newFilteredCharacters: any) => {
-    setFilteredCharacters(newFilteredCharacters);
-    setPage(1); // Reset to first page when filtering
-  };
+  // const handleFilterChange = (newFilteredCharacters: any) => {
+  //   setFilteredCharacters(newFilteredCharacters);
+  //   setPage(1); // Reset to first page when filtering
+  // };
 
   return (
     <Layout>

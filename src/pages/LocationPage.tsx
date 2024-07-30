@@ -5,6 +5,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { getLocation, getCharacter } from "../services/api"; // Add this function to your API service
 import Layout from "../components/Layout";
+import LoadingSpinner from "../components/Spinner";
 
 const LocationContainer = styled.div`
   padding: 20px;
@@ -126,7 +127,7 @@ const LocationPage: React.FC = () => {
     fetchData();
   }, [id]);
 
-  if (!location) return <div>Loading...</div>;
+  if (!location) return <LoadingSpinner />;
 
   const handleResidentClick = (residentId: number) => {
     navigate(`/character/${residentId}`);
@@ -137,7 +138,7 @@ const LocationPage: React.FC = () => {
       <LocationContainer>
         <LocationHeader>
           <LocationImage
-            // src={`https://via.placeholder.com/120?text=${location.name}`}
+            src={`https://via.placeholder.com/120?text=${location.name}`}
             alt={location.name}
           />
           <LocationDetails>
